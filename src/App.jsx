@@ -536,33 +536,73 @@ export default function App() {
           )}
 
           {/* ==================== 6. TERMS & CONDITIONS PAGE ==================== */}
-          {activeTab === 'terms' && (
-            <div className="bg-white rounded-xl shadow-md border border-slate-200 p-4 sm:p-10 space-y-4 sm:space-y-6 text-xs sm:text-sm text-slate-600 leading-relaxed">
-              <div className="border-b border-slate-200 pb-3 sm:pb-4">
-                <h2 className="text-lg sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
-                  <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600 shrink-0" />
-                  {lang === 'hi' ? 'नियम एवं शर्तें (Terms & Conditions)' : 'Terms & Conditions'}
-                </h2>
-                <p className="text-xs text-slate-400 mt-0.5 sm:mt-1">
-                  {lang === 'hi' ? 'अंतिम अपडेट: अगस्त 2026' : 'Last Updated: August 2026'}
-                </p>
-              </div>
+{activeTab === 'terms' && (
+  <div className="bg-white rounded-xl shadow-md border border-slate-200 p-4 sm:p-10 space-y-6 text-xs sm:text-sm text-slate-600 leading-relaxed">
+    <div className="border-b border-slate-200 pb-3 sm:pb-4">
+      <h2 className="text-lg sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
+        <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600 shrink-0" />
+        {lang === 'hi' ? 'नियम एवं शर्तें (Terms & Conditions)' : 'Terms & Conditions'}
+      </h2>
+      <p className="text-xs text-slate-400 mt-0.5 sm:mt-1">
+        {lang === 'hi' ? 'अंतिम अपडेट: अगस्त 2026' : 'Last Updated: August 2026'}
+      </p>
+    </div>
 
-              <p className="text-justify">
-                {lang === 'hi'
-                  ? 'इस डिजिटल प्लेटफॉर्म का उपयोग करके आप हमारी सभी सेवा शर्तों से सहमति व्यक्त करते हैं।'
-                  : 'By accessing this platform, you agree to comply with and be bound by these Terms and Conditions.'}
-              </p>
+    <p className="text-justify">
+      {lang === 'hi'
+        ? 'इस वेबसाइट या कैलकुलेटर प्लेटफ़ॉर्म का उपयोग करके, आप निम्नलिखित नियमों और शर्तों का पूर्ण पालन करने के लिए अपनी सहमति व्यक्त करते हैं। यदि आप इन शर्तों से सहमत नहीं हैं, तो कृपया प्लेटफ़ॉर्म का उपयोग न करें।'
+        : 'By accessing or using this website and solar calculator platform, you agree to comply with and be bound by the following Terms and Conditions. If you do not agree with these terms, please discontinue use of this site.'}
+    </p>
 
-              <div className="my-3 sm:my-4">
-                <img
-                  src="https://images.unsplash.com/photo-1548337138-e87d889cc369?q=80&w=800&auto=format&fit=crop"
-                  alt="Terms Legal Solar"
-                  className="rounded-lg shadow-sm border border-slate-200 h-28 sm:h-48 w-full object-cover"
-                />
-              </div>
-            </div>
-          )}
+    {/* 1. Services Provided */}
+    <div className="space-y-2">
+      <h3 className="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
+        <FileText className="w-4 h-4 text-amber-600 shrink-0" />
+        {lang === 'hi' ? '1. सेवाओं की प्रकृति और अनुमान' : '1. Nature of Services & Estimations'}
+      </h3>
+      <p className="text-justify">
+        {lang === 'hi'
+          ? 'यह प्लेटफ़ॉर्म केवल एक सूचनात्मक और डिजिटल सहायता टूल है। यहाँ दिखाए गए सोलर प्लांट की लागत, सब्सिडी राशि और बैंक EMI के आंकड़े अनुमानित हैं। वास्तविक लागत और सब्सिडी DISCOM नीतियों, वेंडर की दरों और सरकारी दिशानिर्देशों के अनुसार बदल सकती है।'
+          : 'This platform is solely an informational and digital estimation tool. The solar costs, subsidy amounts, and loan EMIs generated are estimates. Actual figures may vary based on DISCOM policies, vendor pricing, and official regulations.'}
+      </p>
+    </div>
+
+    {/* 2. Non-Affiliation Disclaimer */}
+    <div className="space-y-2">
+      <h3 className="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
+        <ShieldCheck className="w-4 h-4 text-amber-600 shrink-0" />
+        {lang === 'hi' ? '2. गैर-सरकारी संबद्धता (Non-Governmental Status)' : '2. Non-Governmental Status'}
+      </h3>
+      <p className="text-justify">
+        {lang === 'hi'
+          ? 'यह एक स्वतंत्र कंसल्टेंसी और जागरूकता प्लेटफ़ॉर्म है। हमारा किसी भी सरकारी संस्था या PM सूर्य घर योजना के आधिकारिक पोर्टल से प्रत्यक्ष संबंध नहीं है। आधिकारिक सब्सिडी आवेदनों के लिए केवल pmsuryaghar.gov.in का उपयोग करें।'
+          : 'This is an independent consultancy and educational platform. It is not directly affiliated with any government department or the official PM Surya Ghar scheme. For official registration, strictly visit pmsuryaghar.gov.in.'}
+      </p>
+    </div>
+
+    {/* 3. User Responsibility */}
+    <div className="space-y-2">
+      <h3 className="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
+        <UserCheck className="w-4 h-4 text-amber-600 shrink-0" />
+        {lang === 'hi' ? '3. उपयोगकर्ता की जिम्मेदारी' : '3. User Responsibility'}
+      </h3>
+      <p className="text-justify">
+        {lang === 'hi'
+          ? 'उपयोगकर्ता यह स्वीकार करता है कि वह प्लेटफ़ॉर्म पर सटीक जानकारी प्रदान करेगा। किसी भी वेंडर का चयन करने या अनुबंध करने से पहले यूज़र को स्वयं वेंडर की मान्यता और साख की जांच करनी होगी।'
+          : 'Users acknowledge that they are responsible for verifying vendor credentials and government empaneled status independently before entering into any formal contracts or financial transactions.'}
+      </p>
+    </div>
+
+    {/* Local Public Image Reference */}
+    <div className="my-3 sm:my-4">
+      <img
+        src="/terms-banner.jpg"
+        alt="Terms and Conditions Solar"
+        className="rounded-lg shadow-sm border border-slate-200 h-28 sm:h-48 w-full object-cover"
+      />
+    </div>
+  </div>
+)}
         </main>
       </div>
 
