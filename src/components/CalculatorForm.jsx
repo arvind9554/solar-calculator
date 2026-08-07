@@ -185,10 +185,9 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
       `💳 *खुद का खर्च (Net Cost):* ₹${pendingResult.netCost.toLocaleString('en-IN')}\n` +
       `🏦 *अनुमानित लोन EMI (5 वर्ष):* ₹${pendingResult.emi.toLocaleString('en-IN')}/माह\n\n` +
       `🎉 *${PARTNER_NAME.toUpperCase()} का विशेष ऑफर*\n` +
-      `पूरे सोलर सिस्टम इंस्टॉलेशन पर पाएं फ्लैट 10% की छूट!\n` +
-      `🏷️ *कूपन कोड:* ${COUPON_CODE}\n` +
-      `🔗 *ऑनलाइन देखें / खरीदें:* ${AFFILIATE_LINK}\n` +
-      `📞 *डायरेक्ट हेल्पलाइन:* ${PARTNER_PHONE}\n\n` +
+      `पूरे सोलर सिस्टम इंस्टॉलेशन पर पाएं 30% तक की भारी छूट!\n` +
+      `🔗 *ऑनलाइन देखें / खरीदें:* https://bluebirdsolar.com/collections/solar-panels?sca_ref=12015179.ntsfqhpbwm\n` +
+      `📞 *डायरेक्ट हेल्पलाइन:* +91-011-47052209\n\n` +
       `सोलर पैनल की बुकिंग और अधिक जानकारी के लिए, दिए गए लिंक पर क्लिक करके पोर्टल पर जाएं या दिए गए नंबर पर तुरंत संपर्क करें।`
       :
       `☀️ *SOLAR SUBSIDY CALCULATOR REPORT*\n\n` +
@@ -201,10 +200,9 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
       `💳 *Net Out-of-Pocket Cost:* ₹${pendingResult.netCost.toLocaleString('en-IN')}\n` +
       `🏦 *Estimated Loan EMI (5 Yrs):* ₹${pendingResult.emi.toLocaleString('en-IN')}/month\n\n` +
       `🎉 *EXCLUSIVE OFFER BY ${PARTNER_NAME.toUpperCase()}*\n` +
-      `Get Flat 10% OFF on complete system installation!\n` +
-      `🏷️ *Use Coupon Code:* ${COUPON_CODE}\n` +
-      `🔗 *Buy Online / Explore:* ${AFFILIATE_LINK}\n` +
-      `📞 *Direct Helpline:* ${PARTNER_PHONE}\n\n` +
+      `Get Up to 30% OFF on complete system installation!\n` +
+      `🔗 *Buy Online / Explore:* https://bluebirdsolar.com/collections/solar-panels?sca_ref=12015179.ntsfqhpbwm\n` +
+      `📞 *Direct Helpline:* +91-011-47052209\n\n` +
       `To book solar panels and for more information, visit the portal by clicking the provided link or contact the given number immediately.`;
 
     const encodedMessage = encodeURIComponent(outputText);
