@@ -3,7 +3,7 @@ import { Calculator, ArrowRight, CheckCircle2, ShieldCheck, Zap, MessageSquare }
 
 const translations = {
   hi: {
-    formTitle: 'पीएम सूर्य घर: सब्सिडी व लोन कैलकुलेटर',
+    formTitle: 'सोलर सब्सिडी कैलकुलेटर',
     subtitle: 'अपनी सौर ऊर्जा बचत और सरकारी सब्सिडी का तुरंत अनुमान लगाएं',
     nameLabel: 'पूरा नाम *',
     namePlaceholder: 'उदा. राहुल शर्मा',
@@ -37,7 +37,7 @@ const translations = {
     modalBtn: 'व्हाट्सएप खोलें और परिणाम देखें'
   },
   en: {
-    formTitle: 'PM Surya Ghar: Subsidy & Loan Calculator',
+    formTitle: 'Solar Subsidy Calculator',
     subtitle: 'Instantly estimate your solar savings and government subsidy',
     nameLabel: 'Full Name *',
     namePlaceholder: 'Ex. Rahul Sharma',
@@ -90,7 +90,7 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
   const [showModal, setShowModal] = useState(false);
   const [pendingResult, setPendingResult] = useState(null);
 
-  // Aapka WhatsApp Business / Admin Phone Number (Country code '91' ke saath)
+  // Admin WhatsApp Phone Number
   const ADMIN_WHATSAPP_NUMBER = "919336518590"; 
 
   const handlePhoneChange = (e) => {
@@ -146,7 +146,7 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
 
       setPendingResult(calculatedResult);
       setIsSubmitting(false);
-      setShowModal(true); // Show WhatsApp Modal
+      setShowModal(true);
 
       // Background submission to Google Sheets
       fetch(
@@ -168,9 +168,9 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
     if (!pendingResult) return;
 
     // Configuration Variables
-    const PARTNER_NAME = "Bluebird"; // Sponsor/Partner Company Name               // Discount Coupon Code
-    const AFFILIATE_LINK = "https://bluebirdsolar.com/collections/solar-panels?sca_ref=12015179.ntsfqhpbwm"; // Aapka tracking link
-    const PARTNER_PHONE = "+91-011-47052209";      // Company Call/Support Number
+    const PARTNER_NAME = "Bluebird";
+    const AFFILIATE_LINK = "https://bluebirdsolar.com/collections/solar-panels?sca_ref=12015179.ntsfqhpbwm";
+    const PARTNER_PHONE = "+91-011-47052209";
 
     // Language ke aadhar par Hindi ya English Message Generate hoga
     const outputText = lang === 'hi' ? 
@@ -185,8 +185,8 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
       `🏦 *अनुमानित लोन EMI (5 वर्ष):* ₹${pendingResult.emi.toLocaleString('en-IN')}/माह\n\n` +
       `🎉 *${PARTNER_NAME.toUpperCase()} का विशेष ऑफर*\n` +
       `पूरे सोलर सिस्टम इंस्टॉलेशन पर पाएं 30% तक की भारी छूट!\n` +
-      `🔗 *ऑनलाइन देखें / खरीदें:* https://bluebirdsolar.com/collections/solar-panels?sca_ref=12015179.ntsfqhpbwm\n` +
-      `📞 *डायरेक्ट हेल्पलाइन:* +91-011-47052209\n\n` +
+      `🔗 *ऑनलाइन देखें / खरीदें:* ${AFFILIATE_LINK}\n` +
+      `📞 *डायरेक्ट हेल्पलाइन:* ${PARTNER_PHONE}\n\n` +
       `सोलर पैनल की बुकिंग और अधिक जानकारी के लिए, दिए गए लिंक पर क्लिक करके पोर्टल पर जाएं या दिए गए नंबर पर तुरंत संपर्क करें।`
       :
       `☀️ *SOLAR SUBSIDY CALCULATOR REPORT*\n\n` +
@@ -200,8 +200,8 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
       `🏦 *Estimated Loan EMI (5 Yrs):* ₹${pendingResult.emi.toLocaleString('en-IN')}/month\n\n` +
       `🎉 *EXCLUSIVE OFFER BY ${PARTNER_NAME.toUpperCase()}*\n` +
       `Get Up to 30% OFF on complete system installation!\n` +
-      `🔗 *Buy Online / Explore:* https://bluebirdsolar.com/collections/solar-panels?sca_ref=12015179.ntsfqhpbwm\n` +
-      `📞 *Direct Helpline:* +91-011-47052209\n\n` +
+      `🔗 *Buy Online / Explore:* ${AFFILIATE_LINK}\n` +
+      `📞 *Direct Helpline:* ${PARTNER_PHONE}\n\n` +
       `To book solar panels and for more information, visit the portal by clicking the provided link or contact the given number immediately.`;
 
     const encodedMessage = encodeURIComponent(outputText);
@@ -404,7 +404,7 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
           )}
         </button>
 
-        {/* Security & Guarantee Badge */}
+        {/* Security Badge */}
         <div className="flex items-center justify-center gap-1.5 text-slate-400 text-[11px] pt-1">
           <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
           <span>100% नि:शुल्क एवं सुरक्षित सरकारी सब्सिडी गणना</span>
