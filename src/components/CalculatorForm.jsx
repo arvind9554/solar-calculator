@@ -168,8 +168,7 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
     if (!pendingResult) return;
 
     // Configuration Variables
-    const PARTNER_NAME = "Bluebird"; // Sponsor/Partner Company Name
-    const COUPON_CODE = "पूरे सोलर सिस्टम इंस्टॉलेशन पर पाएं 30% तक की भारी छूट!";               // Discount Coupon Code
+    const PARTNER_NAME = "Bluebird"; // Sponsor/Partner Company Name               // Discount Coupon Code
     const AFFILIATE_LINK = "https://bluebirdsolar.com/collections/solar-panels?sca_ref=12015179.ntsfqhpbwm"; // Aapka tracking link
     const PARTNER_PHONE = "+91-011-47052209";      // Company Call/Support Number
 
