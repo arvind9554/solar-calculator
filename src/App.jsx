@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Header from './components/Header';
 import AboutUs from './components/AboutUs';
 import CalculatorForm from './components/CalculatorForm';
@@ -13,7 +13,9 @@ export default function App() {
   const [calculationResult, setCalculationResult] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // 5 High Quality Solar Images for Home Hero Zoom Slider
+  const resultsRef = useRef(null);
+
+  // 4 High Quality Solar Images for Home Hero Zoom Slider
   const heroImages = useMemo(() => [
     '/solar1.jpg',
     '/solar2.jpg',
@@ -28,6 +30,14 @@ export default function App() {
     }, 4500);
     return () => clearInterval(timer);
   }, [heroImages.length]);
+
+  // Handle calculation result & auto scroll to results summary
+  const handleCalculation = (data) => {
+    setCalculationResult(data);
+    if (resultsRef.current) {
+      resultsRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
 
   return (
     <div className="min-h-screen bg-slate-100 text-slate-900 flex flex-col justify-between font-sans selection:bg-amber-500 selection:text-slate-950">
@@ -50,7 +60,7 @@ export default function App() {
                     style={{ backgroundImage: `url(${img})` }}
                   />
                 ))}
-                
+
                 {/* Dark Overlay for Text Visibility */}
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent flex flex-col justify-end p-3.5 sm:p-10 text-white">
                   <span className="bg-amber-500 text-slate-950 text-[10px] sm:text-xs font-bold px-2 py-0.5 sm:px-3 sm:py-1 rounded-full w-fit mb-1 sm:mb-3 shadow-md">
@@ -67,13 +77,13 @@ export default function App() {
                   <div className="mt-2 sm:mt-6 flex flex-row gap-2 sm:gap-4">
                     <button
                       onClick={() => setActiveTab('calculator')}
-                      className="bg-amber-500 hover:bg-amber-400 active:scale-95 text-slate-950 font-bold px-2.5 py-1 sm:px-6 sm:py-2.5 rounded-lg text-xs sm:text-sm shadow-lg transition-all text-center"
+                      className="bg-amber-500 hover:bg-amber-400 active:scale-95 text-slate-950 font-bold px-2.5 py-1 sm:px-6 sm:py-2.5 rounded-lg text-xs sm:text-sm shadow-lg transition-all text-center cursor-pointer"
                     >
                       {lang === 'hi' ? 'कैलकुलेटर चलाएं' : 'Launch Calculator'}
                     </button>
                     <button
                       onClick={() => setActiveTab('about')}
-                      className="bg-slate-800/80 hover:bg-slate-800 active:scale-95 text-white font-medium px-2.5 py-1 sm:px-6 sm:py-2.5 rounded-lg text-xs sm:text-sm border border-slate-600 transition-all backdrop-blur-md text-center"
+                      className="bg-slate-800/80 hover:bg-slate-800 active:scale-95 text-white font-medium px-2.5 py-1 sm:px-6 sm:py-2.5 rounded-lg text-xs sm:text-sm border border-slate-600 transition-all backdrop-blur-md text-center cursor-pointer"
                     >
                       {lang === 'hi' ? 'योजना जानें' : 'Learn About'}
                     </button>
@@ -87,7 +97,7 @@ export default function App() {
                       key={idx}
                       onClick={() => setCurrentSlide(idx)}
                       aria-label={`Slide ${idx + 1}`}
-                      className={`h-1.5 sm:h-2.5 rounded-full transition-all duration-300 ${
+                      className={`h-1.5 sm:h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
                         idx === currentSlide ? 'bg-amber-400 w-3.5 sm:w-6' : 'bg-white/50 w-1.5 sm:w-2.5'
                       }`}
                     />
@@ -98,7 +108,7 @@ export default function App() {
               {/* Home Main Grid */}
               <div className="space-y-6 sm:space-y-8">
                 {/* Calculator Section */}
-                <div className="bg-white rounded-xl shadow-md border border-slate-200 p-3.5 sm:p-6">
+                <div className="bg-white rounded-xl shadow-md border border-slate-200 p-3.5 sm:p-6" ref={resultsRef}>
                   <div className="text-center max-w-2xl mx-auto mb-3 sm:mb-4">
                     <span className="bg-amber-100 text-amber-800 text-[10px] sm:text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                       {lang === 'hi' ? 'डिजिटल अनुमान कैलकुलेटर' : 'Digital Estimation Calculator'}
@@ -108,7 +118,7 @@ export default function App() {
                     </h3>
                   </div>
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 items-start">
-                    <CalculatorForm lang={lang} onCalculate={(data) => setCalculationResult(data)} />
+                    <CalculatorForm lang={lang} setLang={setLang} onCalculate={handleCalculation} />
                     <ResultsSummary result={calculationResult} lang={lang} />
                   </div>
                 </div>
@@ -121,7 +131,7 @@ export default function App() {
                       {lang === 'hi' ? 'PM सूर्य घर योजना 2026: एक हरित पहल' : 'PM Surya Ghar Scheme 2026: A Green Initiative'}
                     </h3>
                   </div>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-center">
                     <p className="text-xs sm:text-sm text-slate-600 leading-relaxed text-justify">
                       {lang === 'hi'
@@ -129,19 +139,19 @@ export default function App() {
                         : 'The PM Surya Ghar Muft Bijli Yojana launched by the Government of India aims to power 1 crore households across the nation with clean solar energy. The primary objective of this scheme is to reduce dependency on expensive grid electricity.'}
                     </p>
 
-<img 
-  src="/solar-working-structure.jpg" 
-  alt="Working of a Solar Energy System" 
-  className="w-full h-auto max-h-72 object-contain bg-[#f8f5ee] rounded-xl shadow-md border border-slate-200 p-2"
-/>
+                    <img
+                      src="/solar-working-structure.jpg"
+                      alt="Working of a Solar Energy System"
+                      className="w-full h-auto max-h-72 object-contain bg-[#f8f5ee] rounded-xl shadow-md border border-slate-200 p-2"
+                    />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 items-center pt-1 sm:pt-4">
                     <img
-  src="/solar-install.jpg"
-  alt="Solar Installation Work"
-  className="w-full h-auto max-h-72 object-contain bg-[#f8f5ee] rounded-xl shadow-md border border-slate-200 p-2"
-/>
+                      src="/solar-install.jpg"
+                      alt="Solar Installation Work"
+                      className="w-full h-auto max-h-72 object-contain bg-[#f8f5ee] rounded-xl shadow-md border border-slate-200 p-2"
+                    />
                     <p className="text-xs sm:text-sm text-slate-600 leading-relaxed text-justify order-1 md:order-2">
                       {lang === 'hi'
                         ? 'नवीन एवं नवीकरणीय ऊर्जा मंत्रालय (MNRE) द्वारा इस योजना के अंतर्गत पारदर्शी वित्तीय सहायता (सब्सिडी) सीधे लाभार्थी के बैंक खाते में हस्तांतरित की जाती है। 1 किलोवाट प्लांट पर ₹30,000, 2 किलोवाट प्लांट पर ₹60,000 और 3 किलोवाट या उससे अधिक क्षमता पर ₹78,000 की अधिकतम सब्सिडी का प्रावधान रखा गया है।'
@@ -175,19 +185,37 @@ export default function App() {
                     <ul className="space-y-2 sm:space-y-2.5 text-xs sm:text-sm text-slate-700">
                       <li className="flex items-start gap-2">
                         <span className="font-bold text-amber-600 shrink-0">•</span>
-                        <span><strong>{lang === 'hi' ? 'बिजली का नवीनतम बिल:' : 'Latest Electricity Bill:'}</strong> {lang === 'hi' ? '(Consumer Number और Sanctioned Load जांचने के लिए)।' : '(To verify Consumer Number & Sanctioned Load).'}</span>
+                        <span>
+                          <strong>{lang === 'hi' ? 'बिजली का नवीनतम बिल:' : 'Latest Electricity Bill:'}</strong>{' '}
+                          {lang === 'hi'
+                            ? '(Consumer Number और Sanctioned Load जांचने के लिए)।'
+                            : '(To verify Consumer Number & Sanctioned Load).'}
+                        </span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="font-bold text-amber-600 shrink-0">•</span>
-                        <span><strong>{lang === 'hi' ? 'पहचान पत्र:' : 'Identity Proof:'}</strong> {lang === 'hi' ? 'सरकारी पहचान पत्र।' : 'Government ID Proof.'}</span>
+                        <span>
+                          <strong>{lang === 'hi' ? 'पहचान पत्र:' : 'Identity Proof:'}</strong>{' '}
+                          {lang === 'hi' ? 'सरकारी पहचान पत्र।' : 'Government ID Proof.'}
+                        </span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="font-bold text-amber-600 shrink-0">•</span>
-                        <span><strong>{lang === 'hi' ? 'पते का प्रमाण:' : 'Address / Property Proof:'}</strong> {lang === 'hi' ? 'प्रॉपर्टी के मालिकाना हक का दस्तावेज या टैक्स रसीद।' : 'Property ownership documents or latest house tax receipt.'}</span>
+                        <span>
+                          <strong>{lang === 'hi' ? 'पते का प्रमाण:' : 'Address / Property Proof:'}</strong>{' '}
+                          {lang === 'hi'
+                            ? 'प्रॉपर्टी के मालिकाना हक का दस्तावेज या टैक्स रसीद।'
+                            : 'Property ownership documents or latest house tax receipt.'}
+                        </span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="font-bold text-amber-600 shrink-0">•</span>
-                        <span><strong>{lang === 'hi' ? 'बैंक पासबुक या कैंसिल्ड चेक:' : 'Bank Passbook or Cancelled Cheque:'}</strong> {lang === 'hi' ? 'ताकि सरकार द्वारा सब्सिडी का पैसा सीधे बैंक खाते में (DBT के जरिए) भेजा जा सके।' : 'Ensures direct subsidy transfer straight into your bank account via Direct Benefit Transfer (DBT).'}</span>
+                        <span>
+                          <strong>{lang === 'hi' ? 'बैंक पासबुक या कैंसिल्ड चेक:' : 'Bank Passbook or Cancelled Cheque:'}</strong>{' '}
+                          {lang === 'hi'
+                            ? 'ताकि सरकार द्वारा सब्सिडी का पैसा सीधे बैंक खाते में (DBT के जरिए) भेजा जा सके।'
+                            : 'Ensures direct subsidy transfer straight into your bank account via Direct Benefit Transfer (DBT).'}
+                        </span>
                       </li>
                     </ul>
                   </div>
@@ -201,11 +229,21 @@ export default function App() {
                     <ul className="space-y-2.5 text-xs sm:text-sm text-slate-700">
                       <li className="flex items-start gap-2">
                         <span className="font-bold text-sky-600 shrink-0">•</span>
-                        <span><strong>{lang === 'hi' ? 'छत पर खाली जगह:' : 'Rooftop Space:'}</strong> {lang === 'hi' ? '1 kW सोलर सिस्टम लगाने के लिए लगभग 90 से 120 वर्ग फुट (sq. ft.) छायारहित (shadow-free) खुली छत की जरूरत होती है।' : 'Around 90 to 120 sq. ft. of shadow-free open rooftop area is required for installing a 1 kW solar system.'}</span>
+                        <span>
+                          <strong>{lang === 'hi' ? 'छत पर खाली जगह:' : 'Rooftop Space:'}</strong>{' '}
+                          {lang === 'hi'
+                            ? '1 kW सोलर सिस्टम लगाने के लिए लगभग 90 से 120 वर्ग फुट (sq. ft.) छायारहित (shadow-free) खुली छत की जरूरत होती है।'
+                            : 'Around 90 to 120 sq. ft. of shadow-free open rooftop area is required for installing a 1 kW solar system.'}
+                        </span>
                       </li>
                       <li className="flex items-start gap-2">
                         <span className="font-bold text-sky-600 shrink-0">•</span>
-                        <span><strong>{lang === 'hi' ? 'मंजूरी (Feasibility Approval):' : 'Feasibility Approval:'}</strong> {lang === 'hi' ? 'आपकी स्थानीय बिजली वितरण कंपनी (DISCOM) यह जांचती है कि आपके घर का स्वीकृत लोड (Sanctioned Load) सोलर प्लांट की क्षमता के अनुकूल है या नहीं।' : 'Your local DISCOM verifies whether your sanctioned load matches the requested solar capacity.'}</span>
+                        <span>
+                          <strong>{lang === 'hi' ? 'मंजूरी (Feasibility Approval):' : 'Feasibility Approval:'}</strong>{' '}
+                          {lang === 'hi'
+                            ? 'आपकी स्थानीय बिजली वितरण कंपनी (DISCOM) यह जांचती है कि आपके घर का स्वीकृत लोड (Sanctioned Load) सोलर प्लांट की क्षमता के अनुकूल है या नहीं।'
+                            : 'Your local DISCOM verifies whether your sanctioned load matches the requested solar capacity.'}
+                        </span>
                       </li>
                     </ul>
                   </div>
@@ -225,23 +263,36 @@ export default function App() {
                       <div className="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
                         <span className="font-bold text-amber-600 block mb-0.5">{lang === 'hi' ? 'स्टेप 1:' : 'Step 1:'}</span>
                         {lang === 'hi' ? 'सबसे पहले सरकार की आधिकारिक वेबसाइट ' : 'Visit official portal '}
-                        <a href="https://pmsuryaghar.gov.in" target="_blank" rel="noopener noreferrer" className="text-blue-600 font-medium underline">pmsuryaghar.gov.in</a> 
+                        <a
+                          href="https://pmsuryaghar.gov.in"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 font-medium underline"
+                        >
+                          pmsuryaghar.gov.in
+                        </a>
                         {lang === 'hi' ? ' पर जाकर रजिस्ट्रेशन करें।' : ' and complete registration.'}
                       </div>
 
                       <div className="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
                         <span className="font-bold text-amber-600 block mb-0.5">{lang === 'hi' ? 'स्टेप 2:' : 'Step 2:'}</span>
-                        {lang === 'hi' ? 'पोर्टल पर मौजूद MNRE-Empaneled Vendors (सरकार द्वारा मान्यता प्राप्त कंपनियों) की सूची में से ही किसी एक वेंडर को चुनें। यदि यूज़र किसी गैर-पंजीकृत वेंडर से काम करवाता है, तो सरकारी सब्सिडी नहीं मिलेगी।' : 'Select an MNRE-empaneled vendor. Installing through unempaneled vendors forfeits government subsidy eligibility.'}
+                        {lang === 'hi'
+                          ? 'पोर्टल पर मौजूद MNRE-Empaneled Vendors (सरकार द्वारा मान्यता प्राप्त कंपनियों) की सूची में से ही किसी एक वेंडर को चुनें। यदि यूज़र किसी गैर-पंजीकृत वेंडर से काम करवाता है, तो सरकारी सब्सिडी नहीं मिलेगी।'
+                          : 'Select an MNRE-empaneled vendor. Installing through unempaneled vendors forfeits government subsidy eligibility.'}
                       </div>
 
                       <div className="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
                         <span className="font-bold text-amber-600 block mb-0.5">{lang === 'hi' ? 'स्टेप 3:' : 'Step 3:'}</span>
-                        {lang === 'hi' ? 'वेंडर द्वारा सिस्टम लगाने के बाद DISCOM अधिकारी आकर नेट-मीटर (Net-Meter) इंस्टॉल करेंगे।' : 'Post-installation, local DISCOM officers inspect and install the Net-Meter.'}
+                        {lang === 'hi'
+                          ? 'वेंडर द्वारा सिस्टम लगाने के बाद DISCOM अधिकारी आकर नेट-मीटर (Net-Meter) इंस्टॉल करेंगे।'
+                          : 'Post-installation, local DISCOM officers inspect and install the Net-Meter.'}
                       </div>
 
                       <div className="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
                         <span className="font-bold text-amber-600 block mb-0.5">{lang === 'hi' ? 'स्टेप 4:' : 'Step 4:'}</span>
-                        {lang === 'hi' ? 'नेट-मीटरिंग और फाइनल निरीक्षण के 30 दिनों के भीतर सरकारी सब्सिडी सीधे यूज़र के खाते में आ जाएगी।' : 'Direct DBT subsidy gets credited straight into your bank account within 30 days of inspection.'}
+                        {lang === 'hi'
+                          ? 'नेट-मीटरिंग और फाइनल निरीक्षण के 30 दिनों के भीतर सरकारी सब्सिडी सीधे यूज़र के खाते में आ जाएगी।'
+                          : 'Direct DBT subsidy gets credited straight into your bank account within 30 days of inspection.'}
                       </div>
                     </div>
                   </div>
@@ -254,7 +305,7 @@ export default function App() {
 
           {/* ==================== 2. CALCULATOR TAB ==================== */}
           {activeTab === 'calculator' && (
-            <div className="space-y-4 sm:space-y-8">
+            <div className="space-y-4 sm:space-y-8" ref={resultsRef}>
               <div className="text-center max-w-2xl mx-auto mb-3 sm:mb-6">
                 <span className="bg-amber-100 text-amber-800 text-[10px] sm:text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
                   {lang === 'hi' ? 'डिजिटल अनुमान कैलकुलेटर' : 'Digital Estimation Calculator'}
@@ -270,16 +321,14 @@ export default function App() {
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 items-start">
-                <CalculatorForm lang={lang} onCalculate={(data) => setCalculationResult(data)} />
+                <CalculatorForm lang={lang} setLang={setLang} onCalculate={handleCalculation} />
                 <ResultsSummary result={calculationResult} lang={lang} />
               </div>
             </div>
           )}
 
           {/* ==================== 3. ABOUT US PAGE ==================== */}
-          {activeTab === 'about' && (
-            <AboutUs lang={lang} />
-          )}
+          {activeTab === 'about' && <AboutUs lang={lang} />}
 
           {/* ==================== 4. CONTACT US PAGE ==================== */}
           {activeTab === 'contact' && (
@@ -290,26 +339,60 @@ export default function App() {
                   {lang === 'hi' ? 'संपर्क करें (Contact Us)' : 'Contact Our Experts'}
                 </h2>
                 <p className="text-xs text-slate-500 mt-0.5 sm:mt-1">
-                  {lang === 'hi' ? 'सोलर सब्सिडी, वेंडर सहायता या किसी प्रश्न के लिए हमारी सहायता टीम से जुड़ें।' : 'Reach out to our dedicated support team for any queries regarding solar subsidies or vendors.'}
+                  {lang === 'hi'
+                    ? 'सोलर सब्सिडी, वेंडर सहायता या किसी प्रश्न के लिए हमारी सहायता टीम से जुड़ें।'
+                    : 'Reach out to our dedicated support team for any queries regarding solar subsidies or vendors.'}
                 </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-8">
                 {/* Contact Form */}
-                <form onSubmit={(e) => { e.preventDefault(); alert(lang === 'hi' ? 'संदेश सफलतापूर्वक भेजा गया!' : 'Message sent successfully!'); }} className="space-y-3 sm:space-y-4">
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    alert(lang === 'hi' ? 'संदेश सफलतापूर्वक भेजा गया!' : 'Message sent successfully!');
+                  }}
+                  className="space-y-3 sm:space-y-4"
+                >
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1">{lang === 'hi' ? 'आपका नाम' : 'Your Name'}</label>
-                    <input type="text" required placeholder="Ex. Rahul Sharma" className="w-full px-3 py-1.5 sm:py-2 border border-slate-300 rounded-md text-xs sm:text-sm focus:ring-2 focus:ring-amber-500 outline-none transition" />
+                    <label className="block text-xs font-semibold text-slate-700 mb-1">
+                      {lang === 'hi' ? 'आपका नाम' : 'Your Name'}
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Ex. Rahul Sharma"
+                      className="w-full px-3 py-1.5 sm:py-2 border border-slate-300 rounded-md text-xs sm:text-sm focus:ring-2 focus:ring-amber-500 outline-none transition"
+                    />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1">{lang === 'hi' ? 'ईमेल आईडी' : 'Email Address'}</label>
-                    <input type="email" required placeholder="name@example.com" className="w-full px-3 py-1.5 sm:py-2 border border-slate-300 rounded-md text-xs sm:text-sm focus:ring-2 focus:ring-amber-500 outline-none transition" />
+                    <label className="block text-xs font-semibold text-slate-700 mb-1">
+                      {lang === 'hi' ? 'ईमेल आईडी' : 'Email Address'}
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      placeholder="name@example.com"
+                      className="w-full px-3 py-1.5 sm:py-2 border border-slate-300 rounded-md text-xs sm:text-sm focus:ring-2 focus:ring-amber-500 outline-none transition"
+                    />
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1">{lang === 'hi' ? 'संदेश / पूछताछ' : 'Message / Inquiry'}</label>
-                    <textarea rows={3} required placeholder={lang === 'hi' ? 'अपनी आवश्यकता या सवाल यहाँ लिखें...' : 'Type your query here...'} className="w-full px-3 py-1.5 sm:py-2 border border-slate-300 rounded-md text-xs sm:text-sm focus:ring-2 focus:ring-amber-500 outline-none transition" />
+                    <label className="block text-xs font-semibold text-slate-700 mb-1">
+                      {lang === 'hi' ? 'संदेश / पूछताछ' : 'Message / Inquiry'}
+                    </label>
+                    <textarea
+                      rows={3}
+                      required
+                      placeholder={
+                        lang === 'hi' ? 'अपनी आवश्यकता या सवाल यहाँ लिखें...' : 'Type your query here...'
+                      }
+                      className="w-full px-3 py-1.5 sm:py-2 border border-slate-300 rounded-md text-xs sm:text-sm focus:ring-2 focus:ring-amber-500 outline-none transition"
+                    />
                   </div>
-                  <button type="submit" className="w-full bg-amber-500 hover:bg-amber-400 active:scale-98 text-slate-950 font-bold py-2 sm:py-2.5 rounded-md text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow-sm">
+                  <button
+                    type="submit"
+                    className="w-full bg-amber-500 hover:bg-amber-400 active:scale-98 text-slate-950 font-bold py-2 sm:py-2.5 rounded-md text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow-sm cursor-pointer"
+                  >
                     <Send className="w-4 h-4" />
                     <span>{lang === 'hi' ? 'संदेश भेजें' : 'Send Message'}</span>
                   </button>
@@ -329,14 +412,22 @@ export default function App() {
                       <Phone className="w-4 h-4 sm:w-5 sm:h-5 text-emerald-600 shrink-0" />
                       <div>
                         <p className="font-semibold">{lang === 'hi' ? 'हेल्पलाइन समय:' : 'Helpline Hours:'}</p>
-                        <p className="text-slate-500 text-xs sm:text-sm">{lang === 'hi' ? 'सोमवार से शनिवार (सुबह 10:00 से शाम 6:00 बजे)' : 'Mon to Sat (10:00 AM to 6:00 PM IST)'}</p>
+                        <p className="text-slate-500 text-xs sm:text-sm">
+                          {lang === 'hi'
+                            ? 'सोमवार से शनिवार (सुबह 10:00 से शाम 6:00 बजे)'
+                            : 'Mon to Sat (10:00 AM to 6:00 PM IST)'}
+                        </p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2.5 sm:gap-3 text-slate-700">
                       <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-rose-600 shrink-0" />
                       <div>
                         <p className="font-semibold">{lang === 'hi' ? 'मुख्य कार्यालय:' : 'Head Office:'}</p>
-                        <p className="text-slate-500 text-xs sm:text-sm">{lang === 'hi' ? 'सोलर कंसल्टेंसी टावर, गोमती नगर, लखनऊ, उत्तर प्रदेश' : 'Solar Consultancy Tower, Gomti Nagar, Lucknow, UP'}</p>
+                        <p className="text-slate-500 text-xs sm:text-sm">
+                          {lang === 'hi'
+                            ? 'सोलर कंसल्टेंसी टावर, गोमती नगर, लखनऊ, उत्तर प्रदेश'
+                            : 'Solar Consultancy Tower, Gomti Nagar, Lucknow, UP'}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -359,7 +450,9 @@ export default function App() {
                   <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600 shrink-0" />
                   {lang === 'hi' ? 'गोपनीयता नीति (Privacy Policy)' : 'Privacy Policy'}
                 </h2>
-                <p className="text-xs text-slate-400 mt-0.5 sm:mt-1">{lang === 'hi' ? 'अंतिम अपडेट: अगस्त 2026' : 'Last Updated: August 2026'}</p>
+                <p className="text-xs text-slate-400 mt-0.5 sm:mt-1">
+                  {lang === 'hi' ? 'अंतिम अपडेट: अगस्त 2026' : 'Last Updated: August 2026'}
+                </p>
               </div>
 
               <p className="text-justify">
@@ -386,7 +479,9 @@ export default function App() {
                   <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-600 shrink-0" />
                   {lang === 'hi' ? 'नियम एवं शर्तें (Terms & Conditions)' : 'Terms & Conditions'}
                 </h2>
-                <p className="text-xs text-slate-400 mt-0.5 sm:mt-1">{lang === 'hi' ? 'अंतिम अपडेट: अगस्त 2026' : 'Last Updated: August 2026'}</p>
+                <p className="text-xs text-slate-400 mt-0.5 sm:mt-1">
+                  {lang === 'hi' ? 'अंतिम अपडेट: अगस्त 2026' : 'Last Updated: August 2026'}
+                </p>
               </div>
 
               <p className="text-justify">

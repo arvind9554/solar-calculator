@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calculator, ArrowRight, Languages, CheckCircle2, ShieldCheck, Zap } from 'lucide-react';
+import { Calculator, ArrowRight, CheckCircle2, ShieldCheck, Zap, MessageSquare } from 'lucide-react';
 
 const translations = {
   hi: {
@@ -7,8 +7,8 @@ const translations = {
     subtitle: 'अपनी सौर ऊर्जा बचत और सरकारी सब्सिडी का तुरंत अनुमान लगाएं',
     nameLabel: 'पूरा नाम *',
     namePlaceholder: 'उदा. राहुल शर्मा',
-    phoneLabel: 'मोबाइल नंबर *',
-    phonePlaceholder: '10 अंकों का मोबाइल नंबर',
+    phoneLabel: 'व्हाट्सएप नंबर *',
+    phonePlaceholder: '10 अंकों का व्हाट्सएप नंबर',
     stateLabel: 'राज्य *',
     statePlaceholder: 'उदा. उत्तर प्रदेश',
     billLabel: 'औसत मासिक बिजली बिल (₹)',
@@ -31,24 +31,26 @@ const translations = {
     ],
     submitBtn: 'सब्सिडी व लोन गणना देखें',
     submitting: 'गणना की जा रही है...',
-    switchLang: 'English',
-    validationPhone: 'कृपया 10 अंकों का सही मोबाइल नंबर दर्ज करें'
+    validationPhone: 'कृपया 10 अंकों का सही मोबाइल नंबर दर्ज करें',
+    modalTitle: 'व्हाट्सएप पर परिणाम देखें',
+    modalDesc: 'आपकी सब्सिडी और लोन गणना तैयार है! परिणाम देखने के लिए नीचे बटन पर क्लिक करके अपने व्हाट्सएप पर प्राप्त करें।',
+    modalBtn: 'व्हाट्सएप खोलें और परिणाम देखें'
   },
   en: {
     formTitle: 'PM Surya Ghar: Subsidy & Loan Calculator',
     subtitle: 'Instantly estimate your solar savings and government subsidy',
     nameLabel: 'Full Name *',
     namePlaceholder: 'Ex. Rahul Sharma',
-    phoneLabel: 'Mobile Number *',
-    phonePlaceholder: '10-digit mobile number',
+    phoneLabel: 'WhatsApp Number *',
+    phonePlaceholder: '10-digit WhatsApp number',
     stateLabel: 'State *',
     statePlaceholder: 'Ex. Uttar Pradesh',
     billLabel: 'Average Monthly Electricity Bill (₹)',
     billOptions: [
-      { value: '1000', label: 'Up to ₹1,000' },
-      { value: '2000', label: '₹1,000 - ₹2,500' },
-      { value: '4000', label: '₹2,500 - ₹5,000' },
-      { value: '5000', label: 'Above ₹5,000' }
+      { value: 'Up to ₹1,000', label: 'Up to ₹1,000' },
+      { value: '₹1,000 - ₹2,500', label: '₹1,000 - ₹2,500' },
+      { value: '₹2,500 - ₹5,000', label: '₹2,500 - ₹5,000' },
+      { value: 'Above ₹5,000', label: 'Above ₹5,000' }
     ],
     capacityLabel: 'Desired Solar System Capacity (kW)',
     maxSubsidyNote: '(Max. ₹78,000 Subsidy applicable for 3 kW and above)',
@@ -63,12 +65,14 @@ const translations = {
     ],
     submitBtn: 'View Subsidy & Loan Calculation',
     submitting: 'Calculating...',
-    switchLang: 'हिंदी',
-    validationPhone: 'Please enter a valid 10-digit mobile number'
+    validationPhone: 'Please enter a valid 10-digit mobile number',
+    modalTitle: 'Check Your WhatsApp',
+    modalDesc: 'Your subsidy and loan calculation is ready! Click the button below to view and receive your detailed output on WhatsApp.',
+    modalBtn: 'Open WhatsApp to View Output'
   }
 };
 
-export default function CalculatorForm({ lang = 'hi', setLang, onCalculate }) {
+export default function CalculatorForm({ lang = 'hi', onCalculate }) {
   const t = translations[lang] || translations.hi;
 
   const [formData, setFormData] = useState({
@@ -83,6 +87,11 @@ export default function CalculatorForm({ lang = 'hi', setLang, onCalculate }) {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [phoneError, setPhoneError] = useState('');
+  const [showModal, setShowModal] = useState(false);
+  const [pendingResult, setPendingResult] = useState(null);
+
+  // Aapka WhatsApp Business / Admin Phone Number (Country code '91' ke saath)
+  const ADMIN_WHATSAPP_NUMBER = "919336518590"; 
 
   const handlePhoneChange = (e) => {
     const value = e.target.value.replace(/\D/g, '').slice(0, 10);
@@ -102,15 +111,10 @@ export default function CalculatorForm({ lang = 'hi', setLang, onCalculate }) {
 
     setIsSubmitting(true);
 
-    // Instant UI Execution
     requestAnimationFrame(() => {
       const capacity = parseFloat(formData.capacityKW);
       let subsidy = 0;
 
-      // PM Surya Ghar Scheme Subsidy Calculation Rule:
-      // 1 kW = ₹30,000
-      // 2 kW = ₹60,000
-      // 3 kW to 10 kW = Max ₹78,000 (Capped)
       if (capacity <= 1) {
         subsidy = 30000;
       } else if (capacity === 2) {
@@ -122,8 +126,8 @@ export default function CalculatorForm({ lang = 'hi', setLang, onCalculate }) {
       const estimatedCost = capacity * 55000;
       const netCost = Math.max(0, estimatedCost - subsidy);
       const loanAmount = netCost * 0.8;
-      const monthlyInterestRate = 0.07 / 12; // 7% Annual Interest
-      const tenureMonths = 60; // 5 Years tenure
+      const monthlyInterestRate = 0.07 / 12;
+      const tenureMonths = 60;
 
       const emi =
         (loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, tenureMonths)) /
@@ -140,13 +144,11 @@ export default function CalculatorForm({ lang = 'hi', setLang, onCalculate }) {
         submittedAt: new Date().toISOString(),
       };
 
-      if (onCalculate) {
-        onCalculate(calculatedResult);
-      }
-
+      setPendingResult(calculatedResult);
       setIsSubmitting(false);
+      setShowModal(true); // Show WhatsApp Modal
 
-      // Async Background Submission to Google Sheets
+      // Background submission to Google Sheets
       fetch(
         'https://script.google.com/macros/s/AKfycbzrhgec0RBA1QqnqlqIMcy_p6v0Z-bYBGgPWCZ_5Xt4kwA4Uw4STvEPEoxzIQBl44Mcrg/exec',
         {
@@ -162,34 +164,73 @@ export default function CalculatorForm({ lang = 'hi', setLang, onCalculate }) {
     });
   };
 
-  return (
-    <div className="bg-white rounded-2xl shadow-lg border border-slate-200/80 p-5 sm:p-7 w-full max-w-2xl mx-auto font-sans transition-all">
-      {/* Header Bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-6 border-b border-slate-100 pb-4">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-amber-50 text-amber-600 rounded-xl border border-amber-200/60">
-            <Calculator className="w-6 h-6" />
-          </div>
-          <div>
-            <h2 className="text-lg sm:text-xl font-bold text-slate-900 leading-tight">
-              {t.formTitle}
-            </h2>
-            <p className="text-xs text-slate-500 mt-0.5">{t.subtitle}</p>
-          </div>
-        </div>
+  const handleOpenWhatsApp = () => {
+    if (!pendingResult) return;
 
-        {/* Language Switch Button */}
-        {setLang && (
-          <button
-            type="button"
-            onClick={() => setLang(lang === 'hi' ? 'en' : 'hi')}
-            className="flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold px-3 py-1.5 rounded-full border border-slate-300/80 transition-all cursor-pointer shadow-sm active:scale-95 ml-auto"
-            aria-label="Switch Language"
-          >
-            <Languages className="w-4 h-4 text-amber-600" />
-            <span>{t.switchLang}</span>
-          </button>
-        )}
+    // Configuration Variables
+    const PARTNER_NAME = "ABC Solar Solutions"; // Sponsor/Partner Company Name
+    const COUPON_CODE = "SOLAR10";               // Discount Coupon Code
+    const AFFILIATE_LINK = "https://yourbrand.com/?ref=your_affiliate_id"; // Aapka tracking link
+    const PARTNER_PHONE = "+91-9876543210";      // Company Call/Support Number
+
+    // Language ke aadhar par Hindi ya English Message Generate hoga
+    const outputText = lang === 'hi' ? 
+      `☀️ *सोलर सब्सिडी कैलकुलेटर रिपोर्ट*\n\n` +
+      `👤 *नाम:* ${pendingResult.name}\n` +
+      `📱 *व्हाट्सएप नंबर:* ${pendingResult.phone}\n` +
+      `📍 *राज्य:* ${pendingResult.state}\n` +
+      `⚡ *सिस्टम क्षमता:* ${pendingResult.capacity} kW\n` +
+      `💰 *अनुमानित लागत:* ₹${pendingResult.estimatedCost.toLocaleString('en-IN')}\n` +
+      `🎁 *सरकारी सब्सिडी:* ₹${pendingResult.subsidy.toLocaleString('en-IN')}\n` +
+      `💳 *खुद का खर्च (Net Cost):* ₹${pendingResult.netCost.toLocaleString('en-IN')}\n` +
+      `🏦 *अनुमानित लोन EMI (5 वर्ष):* ₹${pendingResult.emi.toLocaleString('en-IN')}/माह\n\n` +
+      `🎉 *${PARTNER_NAME.toUpperCase()} का विशेष ऑफर*\n` +
+      `पूरे सोलर सिस्टम इंस्टॉलेशन पर पाएं फ्लैट 10% की छूट!\n` +
+      `🏷️ *कूपन कोड:* ${COUPON_CODE}\n` +
+      `🔗 *ऑनलाइन देखें / खरीदें:* ${AFFILIATE_LINK}\n` +
+      `📞 *डायरेक्ट हेल्पलाइन:* ${PARTNER_PHONE}\n\n` +
+      `सोलर पैनल की बुकिंग और अधिक जानकारी के लिए, दिए गए लिंक पर क्लिक करके पोर्टल पर जाएं या दिए गए नंबर पर तुरंत संपर्क करें।`
+      :
+      `☀️ *SOLAR SUBSIDY CALCULATOR REPORT*\n\n` +
+      `👤 *Name:* ${pendingResult.name}\n` +
+      `📱 *WhatsApp Number:* ${pendingResult.phone}\n` +
+      `📍 *State:* ${pendingResult.state}\n` +
+      `⚡ *System Capacity:* ${pendingResult.capacity} kW\n` +
+      `💰 *Estimated Cost:* ₹${pendingResult.estimatedCost.toLocaleString('en-IN')}\n` +
+      `🎁 *Govt. Subsidy:* ₹${pendingResult.subsidy.toLocaleString('en-IN')}\n` +
+      `💳 *Net Out-of-Pocket Cost:* ₹${pendingResult.netCost.toLocaleString('en-IN')}\n` +
+      `🏦 *Estimated Loan EMI (5 Yrs):* ₹${pendingResult.emi.toLocaleString('en-IN')}/month\n\n` +
+      `🎉 *EXCLUSIVE OFFER BY ${PARTNER_NAME.toUpperCase()}*\n` +
+      `Get Flat 10% OFF on complete system installation!\n` +
+      `🏷️ *Use Coupon Code:* ${COUPON_CODE}\n` +
+      `🔗 *Buy Online / Explore:* ${AFFILIATE_LINK}\n` +
+      `📞 *Direct Helpline:* ${PARTNER_PHONE}\n\n` +
+      `To book solar panels and for more information, visit the portal by clicking the provided link or contact the given number immediately.`;
+
+    const encodedMessage = encodeURIComponent(outputText);
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=${ADMIN_WHATSAPP_NUMBER}&text=${encodedMessage}`;
+    
+    window.open(whatsappUrl, '_blank');
+
+    if (onCalculate) {
+      onCalculate(pendingResult);
+    }
+    setShowModal(false);
+  };
+
+  return (
+    <div className="bg-white rounded-2xl shadow-lg border border-slate-200/80 p-5 sm:p-7 w-full max-w-2xl mx-auto font-sans transition-all relative">
+      {/* Header Bar */}
+      <div className="flex items-center gap-3 mb-6 border-b border-slate-100 pb-4">
+        <div className="p-2.5 bg-amber-50 text-amber-600 rounded-xl border border-amber-200/60">
+          <Calculator className="w-6 h-6" />
+        </div>
+        <div>
+          <h2 className="text-lg sm:text-xl font-bold text-slate-900 leading-tight">
+            {t.formTitle}
+          </h2>
+          <p className="text-xs text-slate-500 mt-0.5">{t.subtitle}</p>
+        </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
@@ -265,7 +306,7 @@ export default function CalculatorForm({ lang = 'hi', setLang, onCalculate }) {
           </div>
         </div>
 
-        {/* Solar System Capacity Selection (1 kW to 10 kW) */}
+        {/* Capacity Selection */}
         <div>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
             <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
@@ -372,6 +413,29 @@ export default function CalculatorForm({ lang = 'hi', setLang, onCalculate }) {
           <span>100% नि:शुल्क एवं सुरक्षित सरकारी सब्सिडी गणना</span>
         </div>
       </form>
+
+      {/* WhatsApp Verification Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
+          <div className="bg-white border border-slate-200 p-6 rounded-2xl text-center max-w-sm w-full space-y-4 shadow-2xl">
+            <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-3xl">
+              <MessageSquare className="w-8 h-8" />
+            </div>
+            <h3 className="text-xl font-bold text-slate-900">{t.modalTitle}</h3>
+            <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
+              {t.modalDesc}
+            </p>
+            <button
+              type="button"
+              onClick={handleOpenWhatsApp}
+              className="w-full py-3.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-600/30 cursor-pointer text-sm"
+            >
+              <MessageSquare className="w-5 h-5" />
+              <span>{t.modalBtn}</span>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
