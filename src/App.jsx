@@ -5,7 +5,7 @@ import CalculatorForm from './components/CalculatorForm';
 import ResultsSummary from './components/ResultsSummary';
 import InfoSections from './components/InfoSections';
 import Footer from './components/Footer';
-import { Mail, Phone, MapPin, Send, ShieldCheck, Sun, FileText, FileCheck, Wrench, CheckCircle2 } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, ShieldCheck, Sun, FileText, FileCheck, Wrench, CheckCircle2, Lock, UserCheck, Eye, Database } from 'lucide-react';
 
 export default function App() {
   const [lang, setLang] = useState('hi');
@@ -444,7 +444,7 @@ export default function App() {
 
           {/* ==================== 5. PRIVACY POLICY PAGE ==================== */}
           {activeTab === 'privacy' && (
-            <div className="bg-white rounded-xl shadow-md border border-slate-200 p-4 sm:p-10 space-y-4 sm:space-y-6 text-xs sm:text-sm text-slate-600 leading-relaxed">
+            <div className="bg-white rounded-xl shadow-md border border-slate-200 p-4 sm:p-10 space-y-6 text-xs sm:text-sm text-slate-600 leading-relaxed">
               <div className="border-b border-slate-200 pb-3 sm:pb-4">
                 <h2 className="text-lg sm:text-2xl font-bold text-slate-800 flex items-center gap-2">
                   <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600 shrink-0" />
@@ -457,9 +457,73 @@ export default function App() {
 
               <p className="text-justify">
                 {lang === 'hi'
-                  ? 'सोलर कंसल्टेंसी सर्विसेज आपके व्यक्तिगत डेटा और गोपनीयता की रक्षा करने के लिए पूरी तरह प्रतिबद्ध है।'
-                  : 'Solar Consultancy Services is deeply committed to protecting your personal data and privacy.'}
+                  ? 'सोलर कंसल्टेंसी सर्विसेज आपके व्यक्तिगत डेटा और गोपनीयता की सुरक्षा के प्रति पूरी तरह से समर्पित है। यह गोपनीयता नीति बताती है कि जब आप हमारी वेबसाइट और सोलर कैलकुलेटर का उपयोग करते हैं, तो हम आपकी जानकारी को किस प्रकार एकत्र, उपयोग और सुरक्षित करते हैं।'
+                  : 'Solar Consultancy Services is deeply committed to protecting your personal data and privacy. This Privacy Policy explains how we collect, use, and protect your information when you interact with our website and solar estimation tools.'}
               </p>
+
+              {/* Data Collection */}
+              <div className="space-y-2">
+                <h3 className="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
+                  <Database className="w-4 h-4 text-amber-600 shrink-0" />
+                  {lang === 'hi' ? '1. हम कौन सा डेटा एकत्र करते हैं?' : '1. Information We Collect'}
+                </h3>
+                <p className="text-justify">
+                  {lang === 'hi'
+                    ? 'हमारे प्लेटफ़ॉर्म पर कैलकुलेटर और संपर्क फॉर्म का उपयोग करते समय, हम आपके द्वारा स्वेच्छा से प्रदान की गई जानकारी एकत्र कर सकते हैं, जैसे कि आपका नाम, ईमेल पता, मोबाइल नंबर, और आपके मासिक बिजली बिल या सोलर लोड से संबंधित विवरण।'
+                    : 'When you use our calculators or contact forms, we may collect information you voluntarily provide, such as your name, email address, phone number, and details regarding your monthly electricity consumption or requested solar capacity.'}
+                </p>
+              </div>
+
+              {/* Data Usage */}
+              <div className="space-y-2">
+                <h3 className="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
+                  <UserCheck className="w-4 h-4 text-amber-600 shrink-0" />
+                  {lang === 'hi' ? '2. डेटा का उपयोग कैसे किया जाता है?' : '2. How We Use Your Information'}
+                </h3>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>
+                    {lang === 'hi'
+                      ? 'सटीक सोलर सब्सिडी और EMI का अनुमान प्रदान करने के लिए।'
+                      : 'To calculate accurate solar subsidy estimations and monthly EMI projections.'}
+                  </li>
+                  <li>
+                    {lang === 'hi'
+                      ? 'आपकी पूछताछ का उत्तर देने और आपके अनुरोधों के अनुसार मार्गदर्शन प्रदान करने के लिए।'
+                      : 'To respond to your inquiries and offer guidance based on your requests.'}
+                  </li>
+                  <li>
+                    {lang === 'hi'
+                      ? 'हमारी वेबसाइट की कार्यक्षमता और उपयोगकर्ता अनुभव को बेहतर बनाने के लिए।'
+                      : 'To continuously improve our platform functions and overall user experience.'}
+                  </li>
+                </ul>
+              </div>
+
+              {/* Data Security */}
+              <div className="space-y-2">
+                <h3 className="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
+                  <Lock className="w-4 h-4 text-amber-600 shrink-0" />
+                  {lang === 'hi' ? '3. डेटा सुरक्षा और गोपनीयता' : '3. Data Protection & Security'}
+                </h3>
+                <p className="text-justify">
+                  {lang === 'hi'
+                    ? 'हम आपकी जानकारी को सुरक्षित रखने के लिए कड़े तकनीकी सुरक्षा मानकों का पालन करते हैं। हम आपका व्यक्तिगत डेटा किसी तीसरे पक्ष को बेचते या व्यावसायिक लाभ के लिए साझा नहीं करते हैं।'
+                    : 'We implement rigorous security measures to maintain the safety of your personal information. We do not sell, trade, or otherwise transfer your personally identifiable information to external third parties.'}
+                </p>
+              </div>
+
+              {/* Cookies & Transparency */}
+              <div className="space-y-2">
+                <h3 className="text-sm sm:text-base font-bold text-slate-800 flex items-center gap-2">
+                  <Eye className="w-4 h-4 text-amber-600 shrink-0" />
+                  {lang === 'hi' ? '4. कुकीज़ और थर्ड-पार्टी लिंक्स' : '4. Cookies & External Links'}
+                </h3>
+                <p className="text-justify">
+                  {lang === 'hi'
+                    ? 'यह प्लेटफ़ॉर्म उपयोगकर्ता अनुभव को बेहतर बनाने के लिए बुनियादी स्थानीय कुकीज़ का उपयोग कर सकता है। हमारी वेबसाइट में आधिकारिक सरकारी पोर्टलों (जैसे pmsuryaghar.gov.in) के लिंक हो सकते हैं; उनकी अपनी स्वतंत्र गोपनीयता नीतियां हैं।'
+                    : 'This platform may use standard cookies to enhance user experience. Our site contains links to official government portals (such as pmsuryaghar.gov.in) which operate under independent privacy policies.'}
+                </p>
+              </div>
 
               <div className="my-3 sm:my-4">
                 <img
