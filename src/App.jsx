@@ -527,7 +527,7 @@ export default function App() {
 
               <div className="my-3 sm:my-4">
                 <img
-                  src="https://images.unsplash.com/photo-1509391365360-2e959784a276?q=80&w=800&auto=format&fit=crop"
+                  src="/privacy-policy.jpg"
                   alt="Privacy & Data Protection"
                   className="rounded-lg shadow-sm border border-slate-200 h-28 sm:h-48 w-full object-cover"
                 />
