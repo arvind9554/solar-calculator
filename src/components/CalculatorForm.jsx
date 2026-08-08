@@ -80,7 +80,7 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
     phone: '',
     state: 'Uttar Pradesh',
     monthlyBill: '2500',
-    capacityKW: '2', // Default according to 2500 bill
+    capacityKW: '2',
     hasRoof: 'Yes',
     timeline: 'Immediate',
   });
@@ -100,7 +100,6 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
     }
   };
 
-  // Monthly Bill बदलने पर Automatic Capacity Change करने का फंक्शन
   const handleBillChange = (e) => {
     const selectedBillVal = e.target.value;
     const selectedOption = t.billOptions.find(opt => opt.value === selectedBillVal);
@@ -125,7 +124,7 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
     requestAnimationFrame(() => {
       const capacity = parseFloat(formData.capacityKW);
       
-      // 1. केंद्र सरकार की सब्सिडी (Central Govt Subsidy)
+      // 1. केंद्र सरकार की सब्सिडी
       let centralSubsidy = 0;
       if (capacity <= 1) {
         centralSubsidy = 30000;
@@ -135,7 +134,7 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
         centralSubsidy = 78000;
       }
 
-      // 2. उत्तर प्रदेश राज्य सरकार की सब्सिडी (UP State Govt Subsidy: ₹15,000/kW max ₹30,000)
+      // 2. उत्तर प्रदेश राज्य सरकार की सब्सिडी
       let stateSubsidy = 0;
       const isUP = formData.state.trim().toLowerCase().includes('up') || 
                    formData.state.trim().toLowerCase().includes('uttar pradesh') || 
@@ -145,7 +144,7 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
         if (capacity === 1) {
           stateSubsidy = 15000;
         } else if (capacity >= 2) {
-          stateSubsidy = 30000; // Max UP State Subsidy limit
+          stateSubsidy = 30000;
         }
       }
 
@@ -155,7 +154,7 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
       const estimatedCost = capacity * 55000;
       const netCost = Math.max(0, estimatedCost - totalSubsidy);
       
-      // 80% Loan Amount (20% Down Payment/Margin Money)
+      // 80% Loan Amount
       const loanAmount = netCost * 0.8;
       const monthlyInterestRate = 0.07 / 12; // 7% Annual Interest Rate
       const tenureMonths = 60; // 5 Years
@@ -167,6 +166,9 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
               (Math.pow(1 + monthlyInterestRate, tenureMonths) - 1);
       }
 
+      // exact 2 decimal place EMI
+      const exactEmi = Number(emi.toFixed(2));
+
       const calculatedResult = {
         ...formData,
         capacity,
@@ -176,7 +178,7 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
         estimatedCost,
         netCost,
         loanAmount: Math.round(loanAmount),
-        emi: Math.round(emi),
+        emi: exactEmi, // exact value saved here
         submittedAt: new Date().toISOString(),
       };
 
@@ -204,6 +206,12 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
     if (!pendingResult) return;
 
     const PARTNER_NAME = "Bluebird";
+    
+    // Formatting exact EMI for display (e.g., 316.82)
+    const formattedEmi = typeof pendingResult.emi === 'number' 
+      ? pendingResult.emi.toFixed(2) 
+      : pendingResult.emi;
+
     const outputText = lang === 'hi' ? 
       `☀️ *सोलर सब्सिडी कैलकुलेटर रिपोर्ट*\n\n` +
       `👤 *नाम:* ${pendingResult.name}\n` +
@@ -216,7 +224,7 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
       (pendingResult.stateSubsidy > 0 ? `  • राज्य सरकार (UPNEDA): ₹${pendingResult.stateSubsidy.toLocaleString('en-IN')}\n` : '') +
       `  • *कुल सब्सिडी:* ₹${pendingResult.subsidy.toLocaleString('en-IN')}\n\n` +
       `💳 *खुद का खर्च (Net Cost):* ₹${pendingResult.netCost.toLocaleString('en-IN')}\n` +
-      `🏦 *अनुमानित लोन EMI (80% लोन @ 7% ब्याज, 5 वर्ष):* ₹${pendingResult.emi.toLocaleString('en-IN')}/माह\n\n` +
+      `🏦 *अनुमानित लोन EMI (80% लोन @ 7% ब्याज, 5 वर्ष):* ₹${formattedEmi}/माह\n\n` +
       `🎉 *${PARTNER_NAME.toUpperCase()} का विशेष ऑफर*\n` +
       `पूरे सोलर सिस्टम इंस्टॉलेशन पर पाएं 30% तक की भारी छूट!\n` +
       `🔗 *ऑनलाइन देखें / खरीदें:* https://bluebirdsolar.com/collections/solar-panels?sca_ref=12015179.ntsfqhpbwm\n` +
@@ -234,7 +242,7 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
       (pendingResult.stateSubsidy > 0 ? `  • State Govt (UPNEDA): ₹${pendingResult.stateSubsidy.toLocaleString('en-IN')}\n` : '') +
       `  • *Total Subsidy:* ₹${pendingResult.subsidy.toLocaleString('en-IN')}\n\n` +
       `💳 *Net Out-of-Pocket Cost:* ₹${pendingResult.netCost.toLocaleString('en-IN')}\n` +
-      `🏦 *Estimated Loan EMI (80% Loan @ 7% Int, 5 Yrs):* ₹${pendingResult.emi.toLocaleString('en-IN')}/month\n\n` +
+      `🏦 *Estimated Loan EMI (80% Loan @ 7% Int, 5 Yrs):* ₹${formattedEmi}/month\n\n` +
       `🎉 *EXCLUSIVE OFFER BY ${PARTNER_NAME.toUpperCase()}*\n` +
       `Get Up to 30% OFF on complete system installation!\n` +
       `🔗 *Buy Online / Explore:* https://bluebirdsolar.com/collections/solar-panels?sca_ref=12015179.ntsfqhpbwm\n` +
