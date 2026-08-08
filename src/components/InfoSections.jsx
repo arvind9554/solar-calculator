@@ -46,10 +46,10 @@ const content = {
     colSubsidy: 'Govt. Subsidy',
     colSavings: 'Est. Monthly Savings',
    subsidyData: [
-  { capacity: '1 kW', subsidy: '₹45,000 (केंद्र + UP)', billSavings: '₹1,000 - ₹1,500/month' },
-  { capacity: '2 kW', subsidy: '₹90,000 (केंद्र + UP)', billSavings: '₹2,500 - ₹3,000/month' },
-  { capacity: '3 kW or more', subsidy: '₹1,08,000 (Max)', billSavings: '₹4,500+/month' },
-],
+      { capacity: '1 kW', subsidy: '₹45,000 (Central + UP)', billSavings: '₹1,000 - ₹1,500/month' },
+      { capacity: '2 kW', subsidy: '₹90,000 (Central + UP)', billSavings: '₹2,500 - ₹3,000/month' },
+      { capacity: '3 kW or more', subsidy: '₹1,08,000 (Max)', billSavings: '₹4,500+/month' },
+    ],
     howItWorksTitle: 'How It Works',
     howItWorksSubtitle: 'Get solar installed on your roof in 3 easy steps',
     steps: [
