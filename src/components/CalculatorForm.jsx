@@ -13,13 +13,13 @@ const translations = {
     statePlaceholder: 'उदा. उत्तर प्रदेश',
     billLabel: 'औसत मासिक बिजली बिल (₹)',
     billOptions: [
-      { value: '1000', label: '₹1,000 तक' },
-      { value: '2000', label: '₹1,000 - ₹2,500' },
-      { value: '4000', label: '₹2,500 - ₹5,000' },
-      { value: '5000', label: '₹5,000 से अधिक' }
+      { value: '1000', label: '₹1,000 तक (1 kW अनुशंसित)', kw: '1' },
+      { value: '2500', label: '₹1,000 - ₹2,500 (2 kW अनुशंसित)', kw: '2' },
+      { value: '5000', label: '₹2,500 - ₹5,000 (3 kW अनुशंसित)', kw: '3' },
+      { value: '5001', label: '₹5,000 से अधिक (5 kW अनुशंसित)', kw: '5' }
     ],
-    capacityLabel: 'वांछित सोलर सिस्टम क्षमता (kW)',
-    maxSubsidyNote: '(3 kW या उससे अधिक पर अधिकतम ₹78,000 सब्सिडी मिलती है)',
+    capacityLabel: 'सोलर सिस्टम क्षमता (kW)',
+    maxSubsidyNote: '(UP में 3 kW पर अधिकतम ₹1,08,000 कुल सब्सिडी)',
     roofLabel: 'क्या आपकी अपनी खुद की छत उपलब्ध है?',
     roofYes: 'हाँ, अपनी छत है',
     roofNo: 'नहीं / किराए पर',
@@ -47,13 +47,13 @@ const translations = {
     statePlaceholder: 'Ex. Uttar Pradesh',
     billLabel: 'Average Monthly Electricity Bill (₹)',
     billOptions: [
-      { value: 'Up to ₹1,000', label: 'Up to ₹1,000' },
-      { value: '₹1,000 - ₹2,500', label: '₹1,000 - ₹2,500' },
-      { value: '₹2,500 - ₹5,000', label: '₹2,500 - ₹5,000' },
-      { value: 'Above ₹5,000', label: 'Above ₹5,000' }
+      { value: '1000', label: 'Up to ₹1,000 (1 kW Recommended)', kw: '1' },
+      { value: '2500', label: '₹1,000 - ₹2,500 (2 kW Recommended)', kw: '2' },
+      { value: '5000', label: '₹2,500 - ₹5,000 (3 kW Recommended)', kw: '3' },
+      { value: '5001', label: 'Above ₹5,000 (5 kW Recommended)', kw: '5' }
     ],
-    capacityLabel: 'Desired Solar System Capacity (kW)',
-    maxSubsidyNote: '(Max. ₹78,000 Subsidy applicable for 3 kW and above)',
+    capacityLabel: 'Solar System Capacity (kW)',
+    maxSubsidyNote: '(Up to ₹1,08,000 total subsidy in UP for 3 kW+)',
     roofLabel: 'Is your own roof available?',
     roofYes: 'Yes, own roof available',
     roofNo: 'No / Rented roof',
@@ -78,9 +78,9 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
-    state: '',
-    monthlyBill: '2000',
-    capacityKW: '3',
+    state: 'Uttar Pradesh',
+    monthlyBill: '2500',
+    capacityKW: '2', // Default according to 2500 bill
     hasRoof: 'Yes',
     timeline: 'Immediate',
   });
@@ -90,7 +90,6 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
   const [showModal, setShowModal] = useState(false);
   const [pendingResult, setPendingResult] = useState(null);
 
-  // Aapka WhatsApp Business / Admin Phone Number (Country code '91' ke saath)
   const ADMIN_WHATSAPP_NUMBER = "919336518590"; 
 
   const handlePhoneChange = (e) => {
@@ -99,6 +98,18 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
     if (phoneError && value.length === 10) {
       setPhoneError('');
     }
+  };
+
+  // Monthly Bill बदल्ले पर Automatic Capacity Change करने का फंक्शन
+  const handleBillChange = (e) => {
+    const selectedBillVal = e.target.value;
+    const selectedOption = t.billOptions.find(opt => opt.value === selectedBillVal);
+    
+    setFormData((prev) => ({
+      ...prev,
+      monthlyBill: selectedBillVal,
+      capacityKW: selectedOption ? selectedOption.kw : prev.capacityKW
+    }));
   };
 
   const handleSubmit = (e) => {
@@ -113,18 +124,36 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
 
     requestAnimationFrame(() => {
       const capacity = parseFloat(formData.capacityKW);
-      let subsidy = 0;
-
+      
+      // 1. केंद्र सरकार की सब्सिडी (Central Govt Subsidy)
+      let centralSubsidy = 0;
       if (capacity <= 1) {
-        subsidy = 30000;
+        centralSubsidy = 30000;
       } else if (capacity === 2) {
-        subsidy = 60000;
+        centralSubsidy = 60000;
       } else if (capacity >= 3) {
-        subsidy = 78000;
+        centralSubsidy = 78000;
       }
 
+      // 2. उत्तर प्रदेश राज्य सरकार की सब्सिडी (UP State Govt Subsidy: ₹15,000/kW max ₹30,000)
+      let stateSubsidy = 0;
+      const isUP = formData.state.trim().toLowerCase().includes('up') || 
+                   formData.state.trim().toLowerCase().includes('uttar pradesh') || 
+                   formData.state.trim().toLowerCase().includes('उत्तर प्रदेश');
+
+      if (isUP) {
+        if (capacity === 1) {
+          stateSubsidy = 15000;
+        } else if (capacity >= 2) {
+          stateSubsidy = 30000; // Max UP State Subsidy limit
+        }
+      }
+
+      // कुल सब्सिडी
+      const totalSubsidy = centralSubsidy + stateSubsidy;
+
       const estimatedCost = capacity * 55000;
-      const netCost = Math.max(0, estimatedCost - subsidy);
+      const netCost = Math.max(0, estimatedCost - totalSubsidy);
       const loanAmount = netCost * 0.8;
       const monthlyInterestRate = 0.07 / 12;
       const tenureMonths = 60;
@@ -136,7 +165,9 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
       const calculatedResult = {
         ...formData,
         capacity,
-        subsidy,
+        centralSubsidy,
+        stateSubsidy,
+        subsidy: totalSubsidy,
         estimatedCost,
         netCost,
         loanAmount: Math.round(loanAmount),
@@ -146,9 +177,9 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
 
       setPendingResult(calculatedResult);
       setIsSubmitting(false);
-      setShowModal(true); // Show WhatsApp Modal
+      setShowModal(true);
 
-      // Background submission to Google Sheets
+      // Google Sheets Lead Submission
       fetch(
         'https://script.google.com/macros/s/AKfycbzrhgec0RBA1QqnqlqIMcy_p6v0Z-bYBGgPWCZ_5Xt4kwA4Uw4STvEPEoxzIQBl44Mcrg/exec',
         {
@@ -167,42 +198,43 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
   const handleOpenWhatsApp = () => {
     if (!pendingResult) return;
 
-    // Configuration Variables
-    const PARTNER_NAME = "Bluebird"; // Sponsor/Partner Company Name               // Discount Coupon Code
-    const AFFILIATE_LINK = "https://bluebirdsolar.com/collections/solar-panels?sca_ref=12015179.ntsfqhpbwm"; // Aapka tracking link
-    const PARTNER_PHONE = "+91-011-47052209";      // Company Call/Support Number
-
-    // Language ke aadhar par Hindi ya English Message Generate hoga
+    const PARTNER_NAME = "Bluebird";
     const outputText = lang === 'hi' ? 
       `☀️ *सोलर सब्सिडी कैलकुलेटर रिपोर्ट*\n\n` +
       `👤 *नाम:* ${pendingResult.name}\n` +
       `📱 *व्हाट्सएप नंबर:* ${pendingResult.phone}\n` +
       `📍 *राज्य:* ${pendingResult.state}\n` +
       `⚡ *सिस्टम क्षमता:* ${pendingResult.capacity} kW\n` +
-      `💰 *अनुमानित लागत:* ₹${pendingResult.estimatedCost.toLocaleString('en-IN')}\n` +
-      `🎁 *सरकारी सब्सिडी:* ₹${pendingResult.subsidy.toLocaleString('en-IN')}\n` +
+      `💰 *अनुमानित लागत:* ₹${pendingResult.estimatedCost.toLocaleString('en-IN')}\n\n` +
+      `🎁 *सरकारी सब्सिडी ब्रेकअप:*\n` +
+      `  • केंद्र सरकार (PM Surya Ghar): ₹${pendingResult.centralSubsidy.toLocaleString('en-IN')}\n` +
+      (pendingResult.stateSubsidy > 0 ? `  • राज्य सरकार (UPNEDA): ₹${pendingResult.stateSubsidy.toLocaleString('en-IN')}\n` : '') +
+      `  • *कुल सब्सिडी:* ₹${pendingResult.subsidy.toLocaleString('en-IN')}\n\n` +
       `💳 *खुद का खर्च (Net Cost):* ₹${pendingResult.netCost.toLocaleString('en-IN')}\n` +
       `🏦 *अनुमानित लोन EMI (5 वर्ष):* ₹${pendingResult.emi.toLocaleString('en-IN')}/माह\n\n` +
       `🎉 *${PARTNER_NAME.toUpperCase()} का विशेष ऑफर*\n` +
       `पूरे सोलर सिस्टम इंस्टॉलेशन पर पाएं 30% तक की भारी छूट!\n` +
       `🔗 *ऑनलाइन देखें / खरीदें:* https://bluebirdsolar.com/collections/solar-panels?sca_ref=12015179.ntsfqhpbwm\n` +
       `📞 *डायरेक्ट हेल्पलाइन:* +91-011-47052209\n\n` +
-      `सोलर पैनल की बुकिंग और अधिक जानकारी के लिए, दिए गए लिंक पर क्लिक करके पोर्टल पर जाएं या दिए गए नंबर पर तुरंत संपर्क करें।`
+      `सोलर पैनल की बुकिंग और अधिक जानकारी के लिए, दिए गए लिंक पर क्लिक करके पोर्टल पर जाएं या संपर्क करें।`
       :
       `☀️ *SOLAR SUBSIDY CALCULATOR REPORT*\n\n` +
       `👤 *Name:* ${pendingResult.name}\n` +
       `📱 *WhatsApp Number:* ${pendingResult.phone}\n` +
       `📍 *State:* ${pendingResult.state}\n` +
       `⚡ *System Capacity:* ${pendingResult.capacity} kW\n` +
-      `💰 *Estimated Cost:* ₹${pendingResult.estimatedCost.toLocaleString('en-IN')}\n` +
-      `🎁 *Govt. Subsidy:* ₹${pendingResult.subsidy.toLocaleString('en-IN')}\n` +
+      `💰 *Estimated Cost:* ₹${pendingResult.estimatedCost.toLocaleString('en-IN')}\n\n` +
+      `🎁 *Govt. Subsidy Breakup:*\n` +
+      `  • Central Govt (PM Surya Ghar): ₹${pendingResult.centralSubsidy.toLocaleString('en-IN')}\n` +
+      (pendingResult.stateSubsidy > 0 ? `  • State Govt (UPNEDA): ₹${pendingResult.stateSubsidy.toLocaleString('en-IN')}\n` : '') +
+      `  • *Total Subsidy:* ₹${pendingResult.subsidy.toLocaleString('en-IN')}\n\n` +
       `💳 *Net Out-of-Pocket Cost:* ₹${pendingResult.netCost.toLocaleString('en-IN')}\n` +
       `🏦 *Estimated Loan EMI (5 Yrs):* ₹${pendingResult.emi.toLocaleString('en-IN')}/month\n\n` +
       `🎉 *EXCLUSIVE OFFER BY ${PARTNER_NAME.toUpperCase()}*\n` +
       `Get Up to 30% OFF on complete system installation!\n` +
       `🔗 *Buy Online / Explore:* https://bluebirdsolar.com/collections/solar-panels?sca_ref=12015179.ntsfqhpbwm\n` +
       `📞 *Direct Helpline:* +91-011-47052209\n\n` +
-      `To book solar panels and for more information, visit the portal by clicking the provided link or contact the given number immediately.`;
+      `To book solar panels and for more information, visit the portal by clicking the provided link or contact us immediately.`;
 
     const encodedMessage = encodeURIComponent(outputText);
     const whatsappUrl = `https://api.whatsapp.com/send?phone=${ADMIN_WHATSAPP_NUMBER}&text=${encodedMessage}`;
@@ -291,7 +323,7 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
             </label>
             <select
               value={formData.monthlyBill}
-              onChange={(e) => setFormData({ ...formData, monthlyBill: e.target.value })}
+              onChange={handleBillChange}
               className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-lg text-slate-800 text-sm outline-none transition focus:bg-white focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 cursor-pointer"
             >
               {t.billOptions.map((option) => (
@@ -303,7 +335,7 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
           </div>
         </div>
 
-        {/* Capacity Selection */}
+        {/* Capacity Selection (Automatically pre-selected, can be manually edited) */}
         <div>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
             <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
@@ -322,7 +354,7 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
               >
                 {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((kw) => (
                   <option key={kw} value={kw.toString()}>
-                    {kw} kW System {kw >= 3 ? '(Max. ₹78,000 Subsidy)' : ''}
+                    {kw} kW System {kw === 1 ? '(₹45k Subsidy in UP)' : kw === 2 ? '(₹90k Subsidy in UP)' : '(Max ₹1,08,000 Subsidy in UP)'}
                   </option>
                 ))}
               </select>
@@ -404,14 +436,14 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
           )}
         </button>
 
-        {/* Security & Guarantee Badge */}
+        {/* Security Badge */}
         <div className="flex items-center justify-center gap-1.5 text-slate-400 text-[11px] pt-1">
           <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
           <span>100% नि:शुल्क एवं सुरक्षित सरकारी सब्सिडी गणना</span>
         </div>
       </form>
 
-      {/* WhatsApp Verification Modal */}
+      {/* WhatsApp Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in">
           <div className="bg-white border border-slate-200 p-6 rounded-2xl text-center max-w-sm w-full space-y-4 shadow-2xl">
