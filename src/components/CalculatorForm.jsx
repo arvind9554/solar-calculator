@@ -100,7 +100,7 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
     }
   };
 
-  // Monthly Bill बदल्ले पर Automatic Capacity Change करने का फंक्शन
+  // Monthly Bill बदलने पर Automatic Capacity Change करने का फंक्शन
   const handleBillChange = (e) => {
     const selectedBillVal = e.target.value;
     const selectedOption = t.billOptions.find(opt => opt.value === selectedBillVal);
@@ -154,13 +154,18 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
 
       const estimatedCost = capacity * 55000;
       const netCost = Math.max(0, estimatedCost - totalSubsidy);
+      
+      // 80% Loan Amount (20% Down Payment/Margin Money)
       const loanAmount = netCost * 0.8;
-      const monthlyInterestRate = 0.07 / 12;
-      const tenureMonths = 60;
+      const monthlyInterestRate = 0.07 / 12; // 7% Annual Interest Rate
+      const tenureMonths = 60; // 5 Years
 
-      const emi =
-        (loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, tenureMonths)) /
-        (Math.pow(1 + monthlyInterestRate, tenureMonths) - 1);
+      // Loan EMI Formula
+      let emi = 0;
+      if (loanAmount > 0) {
+        emi = (loanAmount * monthlyInterestRate * Math.pow(1 + monthlyInterestRate, tenureMonths)) /
+              (Math.pow(1 + monthlyInterestRate, tenureMonths) - 1);
+      }
 
       const calculatedResult = {
         ...formData,
@@ -211,7 +216,7 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
       (pendingResult.stateSubsidy > 0 ? `  • राज्य सरकार (UPNEDA): ₹${pendingResult.stateSubsidy.toLocaleString('en-IN')}\n` : '') +
       `  • *कुल सब्सिडी:* ₹${pendingResult.subsidy.toLocaleString('en-IN')}\n\n` +
       `💳 *खुद का खर्च (Net Cost):* ₹${pendingResult.netCost.toLocaleString('en-IN')}\n` +
-      `🏦 *अनुमानित लोन EMI (5 वर्ष):* ₹${pendingResult.emi.toLocaleString('en-IN')}/माह\n\n` +
+      `🏦 *अनुमानित लोन EMI (80% लोन @ 7% ब्याज, 5 वर्ष):* ₹${pendingResult.emi.toLocaleString('en-IN')}/माह\n\n` +
       `🎉 *${PARTNER_NAME.toUpperCase()} का विशेष ऑफर*\n` +
       `पूरे सोलर सिस्टम इंस्टॉलेशन पर पाएं 30% तक की भारी छूट!\n` +
       `🔗 *ऑनलाइन देखें / खरीदें:* https://bluebirdsolar.com/collections/solar-panels?sca_ref=12015179.ntsfqhpbwm\n` +
@@ -229,7 +234,7 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
       (pendingResult.stateSubsidy > 0 ? `  • State Govt (UPNEDA): ₹${pendingResult.stateSubsidy.toLocaleString('en-IN')}\n` : '') +
       `  • *Total Subsidy:* ₹${pendingResult.subsidy.toLocaleString('en-IN')}\n\n` +
       `💳 *Net Out-of-Pocket Cost:* ₹${pendingResult.netCost.toLocaleString('en-IN')}\n` +
-      `🏦 *Estimated Loan EMI (5 Yrs):* ₹${pendingResult.emi.toLocaleString('en-IN')}/month\n\n` +
+      `🏦 *Estimated Loan EMI (80% Loan @ 7% Int, 5 Yrs):* ₹${pendingResult.emi.toLocaleString('en-IN')}/month\n\n` +
       `🎉 *EXCLUSIVE OFFER BY ${PARTNER_NAME.toUpperCase()}*\n` +
       `Get Up to 30% OFF on complete system installation!\n` +
       `🔗 *Buy Online / Explore:* https://bluebirdsolar.com/collections/solar-panels?sca_ref=12015179.ntsfqhpbwm\n` +
@@ -335,7 +340,7 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
           </div>
         </div>
 
-        {/* Capacity Selection (Automatically pre-selected, can be manually edited) */}
+        {/* Capacity Selection */}
         <div>
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-2">
             <label className="block text-xs font-semibold text-slate-700 uppercase tracking-wider">
