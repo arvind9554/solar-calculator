@@ -8,9 +8,9 @@ const content = {
     colSubsidy: 'सरकारी सब्सिडी',
     colSavings: 'अनुमानित मासिक बचत',
     subsidyData: [
-      { capacity: '1 kW', subsidy: '₹30,000', billSavings: '₹1,000 - ₹1,500/माह' },
-      { capacity: '2 kW', subsidy: '₹60,000', billSavings: '₹2,500 - ₹3,000/माह' },
-      { capacity: '3 kW या अधिक', subsidy: '₹78,000 (अधिकतम)', billSavings: '₹4,500+/माह' },
+      { capacity: '1 kW', subsidy: '₹45,000 (केंद्र ₹30k + UP ₹15k)', billSavings: '₹1,000 - ₹1,500/माह' },
+      { capacity: '2 kW', subsidy: '₹90,000 (केंद्र ₹60k + UP ₹30k)', billSavings: '₹2,500 - ₹3,000/माह' },
+      { capacity: '3 kW या अधिक', subsidy: '₹1,08,000 (अधिकतम)', billSavings: '₹4,500+/माह' },
     ],
     howItWorksTitle: 'यह कैसे काम करता है?',
     howItWorksSubtitle: '3 आसान चरणों में अपने घर पर सोलर लगवाएं',
@@ -31,8 +31,8 @@ const content = {
     faqTitle: 'अक्सर पूछे जाने वाले सवाल (FAQs)',
     faqs: [
       {
-        q: 'PM सूर्य घर योजना के तहत ₹78,000 की सब्सिडी किसे मिलती है?',
-        a: '3 kW या उससे अधिक क्षमता के रूफटॉप सोलर सिस्टम लगवाने वाले आवासीय (Residential) उपभोक्ताओं को अधिकतम ₹78,000 की केंद्रीय वित्तीय सहायता (Subsidy) मिलती है।',
+        q: 'PM सूर्य घर योजना के तहत ₹1,08,000 की सब्सिडी किसे मिलती है?',
+        a: '3 kW या उससे अधिक क्षमता के रूफटॉप सोलर सिस्टम लगवाने वाले आवासीय (Residential) उपभोक्ताओं को अधिकतम ₹1,08,000 की केंद्रीय वित्तीय सहायता (Subsidy) मिलती है।',
       },
       {
         q: 'क्या सोलर सिस्टम के लिए आसान बैंक लोन उपलब्ध है?',
@@ -45,28 +45,10 @@ const content = {
     colCapacity: 'Solar Plant Capacity',
     colSubsidy: 'Govt. Subsidy',
     colSavings: 'Est. Monthly Savings',
-    subsidyData: [
-  { 
-    capacity: '1 kW', 
-    centralSubsidy: '₹30,000', 
-    stateSubsidy: '₹15,000', 
-    totalSubsidy: '₹45,000', 
-    billSavings: '₹1,000 - ₹1,500/month' 
-  },
-  { 
-    capacity: '2 kW', 
-    centralSubsidy: '₹60,000', 
-    stateSubsidy: '₹30,000', 
-    totalSubsidy: '₹90,000', 
-    billSavings: '₹2,500 - ₹3,000/month' 
-  },
-  { 
-    capacity: '3 kW or more', 
-    centralSubsidy: '₹78,000', 
-    stateSubsidy: '₹30,000', 
-    totalSubsidy: '₹1,08,000', 
-    billSavings: '₹4,500+/month' 
-  },
+   subsidyData: [
+  { capacity: '1 kW', subsidy: '₹45,000 (केंद्र + UP)', billSavings: '₹1,000 - ₹1,500/month' },
+  { capacity: '2 kW', subsidy: '₹90,000 (केंद्र + UP)', billSavings: '₹2,500 - ₹3,000/month' },
+  { capacity: '3 kW or more', subsidy: '₹1,08,000 (Max)', billSavings: '₹4,500+/month' },
 ],
     howItWorksTitle: 'How It Works',
     howItWorksSubtitle: 'Get solar installed on your roof in 3 easy steps',
@@ -87,8 +69,8 @@ const content = {
     faqTitle: 'Frequently Asked Questions (FAQs)',
     faqs: [
       {
-        q: 'Who gets the ₹78,000 subsidy under PM Surya Ghar Scheme?',
-        a: 'Residential consumers installing rooftop solar systems of 3 kW or higher capacity are eligible for the maximum central subsidy of ₹78,000.',
+        q: 'Who gets the ₹1,08,000 subsidy under PM Surya Ghar Scheme?',
+        a: 'Residential consumers installing rooftop solar systems of 3 kW or higher capacity are eligible for the maximum central subsidy of ₹1,08,000.',
       },
       {
         q: 'Are easy bank loans available for solar installation?',
