@@ -67,7 +67,7 @@ export default function App() {
                     {lang === 'hi' ? 'PM सूर्य घर मुफ़्त बिजली योजना' : 'PM Surya Ghar Scheme'}
                   </span>
                   <h2 className="text-base xs:text-lg sm:text-4xl font-extrabold text-white leading-tight">
-                    {lang === 'hi' ? 'स्वच्छ ऊर्जा अपनाएं, ₹78,000 की सब्सिडी पाएं' : 'Adopt Clean Energy, Get Up to ₹78,000 Subsidy'}
+                    {lang === 'hi' ? 'स्वच्छ ऊर्जा अपनाएं, ₹1,08,000 की सब्सिडी पाएं' : 'Adopt Clean Energy, Get Up to ₹1,08,000 Subsidy'}
                   </h2>
                   <p className="hidden sm:block text-xs sm:text-sm text-slate-200 mt-1 sm:mt-2 max-w-2xl leading-relaxed">
                     {lang === 'hi'
