@@ -5,7 +5,7 @@ import CalculatorForm from './components/CalculatorForm';
 import ResultsSummary from './components/ResultsSummary';
 import InfoSections from './components/InfoSections';
 import Footer from './components/Footer';
-import { Mail, Phone, MapPin, Send, ShieldCheck, Sun, FileText, FileCheck, Wrench, CheckCircle2, Lock, UserCheck, Eye, Database } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, ShieldCheck, Sun, FileText, FileCheck, Wrench, CheckCircle2, Lock, UserCheck, Eye, Database, Users, Globe } from 'lucide-react';
 
 export default function App() {
   const [lang, setLang] = useState('hi');
@@ -122,6 +122,43 @@ export default function App() {
                     <ResultsSummary result={calculationResult} lang={lang} />
                   </div>
                 </div>
+
+                  {/* ==================== STATS BANNER SECTION ==================== */}
+<div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+  {/* Card 1: Users */}
+  <div className="bg-white rounded-xl p-4 sm:p-5 border border-slate-200/80 shadow-sm flex flex-col items-center justify-center text-center">
+    <div className="flex items-center space-x-2 mb-1">
+      <Users className="w-5 h-5 sm:w-6 sm:h-6 text-amber-500" />
+      <span className="text-2xl sm:text-3xl font-extrabold text-slate-900">15,000+</span>
+    </div>
+    <p className="text-xs sm:text-sm text-slate-600 font-medium">
+      {lang === 'hi' ? 'संतुष्ट उपभोक्ता एवं परामर्श' : 'Satisfied Users & Consultations'}
+    </p>
+  </div>
+
+  {/* Card 2: Transparency */}
+  <div className="bg-white rounded-xl p-4 sm:p-5 border border-slate-200/80 shadow-sm flex flex-col items-center justify-center text-center">
+    <div className="flex items-center space-x-2 mb-1">
+      <ShieldCheck className="w-5 h-5 sm:w-6 sm:h-6 text-emerald-500" />
+      <span className="text-2xl sm:text-3xl font-extrabold text-slate-900">100%</span>
+    </div>
+    <p className="text-xs sm:text-sm text-slate-600 font-medium">
+      {lang === 'hi' ? 'पारदर्शिता एवं सटीक गणना' : 'Transparency & Accurate Calculation'}
+    </p>
+  </div>
+
+  {/* Card 3: Coverage */}
+  <div className="bg-white rounded-xl p-4 sm:p-5 border border-slate-200/80 shadow-sm flex flex-col items-center justify-center text-center">
+    <div className="flex items-center space-x-2 mb-1">
+      <Globe className="w-5 h-5 sm:w-6 sm:h-6 text-blue-500" />
+      <span className="text-2xl sm:text-3xl font-extrabold text-slate-900">28+</span>
+    </div>
+    <p className="text-xs sm:text-sm text-slate-600 font-medium">
+      {lang === 'hi' ? 'राज्य एवं केंद्र शासित प्रदेश' : 'States & Union Territories'}
+    </p>
+  </div>
+</div>
+
 
                 {/* Informational Content */}
                 <div className="bg-white rounded-xl shadow-md border border-slate-200 p-3.5 sm:p-8 space-y-4 sm:space-y-6">
