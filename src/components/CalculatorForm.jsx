@@ -444,6 +444,17 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
               <ArrowRight className="w-5 h-5 shrink-0" />
             </>
           )}
+
+{/* Example: Check Eligibility Button*/ }
+<a 
+  href="https://omg10.com/4/11545622" 
+  target="_blank" 
+  rel="noopener noreferrer"
+  class="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition"
+>
+  🔍 सब्सिडी पात्रता जाँचें (Check Status)
+</a>
+
         </button>
 
         {/* Security Badge */}
