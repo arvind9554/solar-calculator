@@ -444,18 +444,18 @@ export default function CalculatorForm({ lang = 'hi', onCalculate }) {
               <ArrowRight className="w-5 h-5 shrink-0" />
             </>
           )}
-
-{/* Example: Check Eligibility Button*/ }
-<a 
-  href="https://omg10.com/4/11545622" 
-  target="_blank" 
-  rel="noopener noreferrer"
-  class="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition"
->
-  🔍 सब्सिडी पात्रता जाँचें (Check Status)
-</a>
-
         </button>
+ 
+{/* 👇 Monetag Direct Link Button - अलग से नया बटन */}
+<a
+  href="https://omg10.com/4/11545622"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="mt-3 flex items-center justify-center gap-2 w-full py-3 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl shadow-md transition duration-200 text-center text-sm md:text-base cursor-pointer"
+>
+  <span className="text-lg">🔍</span>
+  <span>सब्सिडी पात्रता सूची एवं नियम जाँचें (Official Status)</span>
+</a>
 
         {/* Security Badge */}
         <div className="flex items-center justify-center gap-1.5 text-slate-400 text-[11px] pt-1">
